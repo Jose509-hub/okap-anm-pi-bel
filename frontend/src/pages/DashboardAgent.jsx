@@ -1,0 +1,1 @@
+export default function DashboardAgent() { return <div className="container mt-5"><h1>Espace Administration Agent</h1></div>; }

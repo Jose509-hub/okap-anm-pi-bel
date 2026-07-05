@@ -1,0 +1,1 @@
+export default function DashboardCitoyen() { return <div className="container mt-5"><h1>Espace Citoyen</h1></div>; }
