@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -9,4 +10,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 //Route protegee (Necessite la connexion)
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->group(function(){
+    //Deconnexion
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    //CRUD du signalement
+    Route::get('/reports', [ReportController::class, 'index']);
+    Route::post('/reports', [ReportController::class, 'store']);
+    Route::put('/reports', [ReportController::class, 'update']);
+    Route::put('/reports', [ReportController::class, 'destroy']);
+});
