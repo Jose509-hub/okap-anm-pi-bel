@@ -4,6 +4,7 @@ import { AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
 import DashboardCitoyen from './pages/DashboardCitoyen';
 import DashboardAgent from './pages/DashboardAgent';
+import Register from './pages/Register';
 
 export default function App() {
   const { user } = useContext(AuthContext);
@@ -13,7 +14,8 @@ export default function App() {
       <Routes>
         {/* Route publique : Connexion */}
         <Route path="/login" element={!user ? <Login /> : (user.role === 'agent' ? <Navigate to="/agent/dashboard" /> : <Navigate to="/citoyen/dashboard" />)} />
-
+        <Route path="/register" element={!user ? <Register /> : (user.role === 'agent' ? <Navigate to="/agent/dashboard" /> : <Navigate to="/citoyen/dashboard" /> )}></Route>
+        
         {/*Routes privees securisees selon le role */}
         <Route path="/citoyen/dashboard" element={user && user.role === 'citoyen' ? <DashboardCitoyen /> : <Navigate to="/login" /> } />
         <Route path="/agent/dashboard" element={user && user.role === 'agent' ? <DashboardAgent /> : <Navigate to="/login" />} />
