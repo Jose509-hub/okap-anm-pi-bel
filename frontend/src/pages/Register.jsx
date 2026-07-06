@@ -7,13 +7,13 @@ export default function Register() {
     //Capturer les infos du formulaires
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState();
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('citoyen'); //On met citoyen par defaut
     const [secretCode, setSecretCode] = useState('');
 
     const [error, setError] = useState('');
-    const [success, setSucces] = useState('');
+    const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate(); //pour la redirection apres l'inscription
@@ -22,10 +22,13 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSucces('');
+        setSuccess('');
         setLoading(true);
 
         try {
+
+            await api.get('http://localhost:8000/sanctum/csrf-cookie');
+
             //Preparation des donnees a envoyer
             const registerData = {
                 name,
@@ -38,8 +41,15 @@ export default function Register() {
 
             const response = await api.post('/register', registerData);
 
-            if (response.data.success) {
-                setSucces('Inscription réussie')
+            if (response.status === 200 || response.status === 201 || response.data.success) {
+                setSuccess('Inscription réussie')
+
+                // Nettoyage des champs du formulaire pour des raisons de sécurité
+                setName('');
+                setEmail('');
+                setPhone('');
+                setPassword('');
+
                 //Une petite attente de 2 sec pour laisser apparaitre le message
                 setTimeout(() => {
                     navigate('/login');
@@ -49,8 +59,9 @@ export default function Register() {
         } catch (err) {
             //On extrait les messages d'erreurs du validateur
             if (err.response?.data?.errors) {
-                const firstErrorKey = Object.keys(err.response.data.errors)[0];
-                setError(err.response.data.errors[firstErrorKey][0]);
+                const validationErrors = err.response.data.errors;
+                const firstKey = Object.keys(validationErrors)[0];
+                setError(validationErrors[firstKey][0] || "Donnees invalide");
             } else {
                 setError(err.response?.data?.message || "Une erreur est survenue lors de l'inscription.");
             }
@@ -137,13 +148,13 @@ export default function Register() {
                     </div>
 
                     {/*Affichage champ code secret si agent est selectionne */}
-                    {role === 'agent' && (
+                    {role === 'Agent' && (
                         <div className="mb-4 animate_animated animate_FadeIn">
                             <label className="form-label fw-semibold text-danger small">Code Secret de la Mairie</label>
                             <input 
                                 type="password" 
                                 className="form-control border-danger"
-                                value={secretCode}
+                                value={secretCode || ''}
                                 onChange={(e) => setSecretCode(e.target.value)}
                                 required
                             />

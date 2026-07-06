@@ -16,4 +16,27 @@ const api = axios.create({
     withCredentials: true,
 });
 
+//Recuperation du cookie CSRF
+const csrfApi = axios.create({
+    baseURL: 'http://localhost:8000',
+    withCredentials: true,
+});
+
+// Intercepteur pour ajouter X-XSRF-TOKEN à chaque requête de l'instance api
+api.interceptors.request.use(config => {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='));
+    if (cookieValue) {
+        const token = cookieValue.split('=')[1];
+        // Décodage URL obligatoire (le cookie est encodé)
+        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
+        console.log('Token CSRF injecté :', token.substring(0, 20) + '...');
+    } else {
+        console.warn('Cookie XSRF-TOKEN introuvable');
+    }
+    return config;
+});
+
 export default api;
+export {csrfApi};

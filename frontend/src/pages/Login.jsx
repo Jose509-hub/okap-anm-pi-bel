@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import api from "../services/api";
+import api, { csrfApi } from "../services/api";
 import { Link } from "react-router-dom";
 
 export default function Login() {
@@ -20,7 +20,10 @@ export default function Login() {
         setLoading(true);
 
         try {
-            //Appel de l'API Laravel  a travers l'instance axios
+            //Recuperation du cookie CSRF
+            await csrfApi.get('/sanctum/csrf-cookie');
+
+            //Envoie de la tentative de connexion
             const response = await api.post('/login', { email, password});
 
             if (response.data.success) {
