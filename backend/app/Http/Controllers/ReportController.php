@@ -25,7 +25,7 @@ class ReportController extends Controller
 
         //On renvoie la liste sous forme de JSON a react
         return response()->json([
-            'sucess' => true,
+            'success' => true,
             'reports' => $reports
         ], 200);
     }
@@ -59,7 +59,7 @@ class ReportController extends Controller
 
         //Reponse de succes 
         return response()->json([
-            'succes' =>true,
+            'success' =>true,
             'message' =>'Signalement enregistré avec succès à la mairie !',
             'report' => $report
         ], 201);
@@ -159,7 +159,7 @@ class ReportController extends Controller
                 'message' => 'Impossible de supprimer un signalement pris en charge'
             ], 403);
             }
-            $report->delete;
+            $report->delete();
 
             // 4. Réponse de succes
             return response()->json([

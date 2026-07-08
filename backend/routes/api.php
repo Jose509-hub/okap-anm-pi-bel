@@ -17,6 +17,6 @@ Route::middleware('auth:sanctum')->group(function(){
     //CRUD du signalement
     Route::get('/reports', [ReportController::class, 'index']);
     Route::post('/reports', [ReportController::class, 'store']);
-    Route::put('/reports', [ReportController::class, 'update']);
-    Route::put('/reports', [ReportController::class, 'destroy']);
+    Route::put('/reports/{report}', [ReportController::class, 'update']);
+    Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
 });
