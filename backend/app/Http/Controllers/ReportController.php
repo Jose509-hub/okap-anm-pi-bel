@@ -80,9 +80,11 @@ class ReportController extends Controller
 
         //Modification du statut par un agent
         if ($user->role === 'agent') {
-            $request->validate([
-                'status' => 'required|in:En attente, En cours, Traité'
+            $validate = $request->validate([
+                'status' => 'required|in:En attente,En cours,Traité'
             ]);
+            $report->status = $validate['status'];
+            $report->save();
 
             return response()->json([
                 'success' => true,
@@ -97,7 +99,7 @@ class ReportController extends Controller
             if ($report->user_id !== $user->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Vous n\'etes pas authorise a modifier ce signalement'
+                    'message' => 'Vous n\'etes pas authorisé a modifier ce signalement'
                 ], 403);
             }
         }

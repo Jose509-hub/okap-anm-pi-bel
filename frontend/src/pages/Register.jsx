@@ -44,7 +44,7 @@ export default function Register() {
             if (response.status === 200 || response.status === 201 || response.data.success) {
                 setSuccess('Inscription réussie')
 
-                // Nettoyage des champs du formulaire pour des raisons de sécurité
+                // Nettoyage des champs du formulaire
                 setName('');
                 setEmail('');
                 setPhone('');
@@ -142,13 +142,13 @@ export default function Register() {
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                         >
-                            <option value="Citoyen">Citoyen du cap-Haïtien</option>
-                            <option value="Agent">Agent d'Assainissement de la Mairie</option>
+                            <option value="citoyen">Citoyen du cap-Haïtien</option>
+                            <option value="agent">Agent d'Assainissement de la Mairie</option>
                         </select>      
                     </div>
 
                     {/*Affichage champ code secret si agent est selectionne */}
-                    {role === 'Agent' && (
+                    {role === 'agent' && (
                         <div className="mb-4 animate_animated animate_FadeIn">
                             <label className="form-label fw-semibold text-danger small">Code Secret de la Mairie</label>
                             <input 
