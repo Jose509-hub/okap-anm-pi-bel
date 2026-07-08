@@ -8,6 +8,11 @@ export default function DashboardAgent() {
   const [error, setError] = useState('');
   const [updateLoading, setUpdateLoading] = useState(null); // Piste quelle ligne est en cours de modification
 
+  // États pour stocker les critères de filtrage
+  const [filterZone, setFilterZone] = useState('tous');
+  const [filterUrgency, setFilterUrgency] = useState('tous');
+
+
   // Chargement automatique de tous les signalements de la mairie au démarrage
   useEffect(() => {
     fetchAllReports();
@@ -62,6 +67,12 @@ export default function DashboardAgent() {
       default: return '';
     }
   };
+    // Filtrage combine des signalements
+    const filteredReports = reports.filter((report) => {
+    const matchZone = filterZone === 'tous' || report.zone.toLowerCase() === filterZone.toLowerCase();
+    const matchUrgency = filterUrgency === 'tous' || report.urgency.toLowerCase() === filterUrgency.toLowerCase();
+    return matchZone && matchUrgency;
+  });
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
@@ -74,6 +85,57 @@ export default function DashboardAgent() {
         </div>
 
         {error && <div className="alert alert-danger">{error}</div>}
+
+        {/* Barre de filtrage*/}
+        <div className="card p-3 mb-4 shadow-sm border-0 bg-white" style={{ borderRadius: '12px' }}>
+            <div className="row g-3 align-items-center">
+                <div className="col-12 col-md-auto">
+                    <span className="fw-bold text-secondary small text-uppercase">🔍 Filtrer le registre :</span>
+                </div>
+            
+                {/* Filtre par Quartier */}
+                <div className="col-12 col-md-3">
+                    <label className="form-label small fw-semibold mb-1 text-muted">Quartier / Zone</label>
+                    <select 
+                        className="form-select form-select-sm"
+                        value={filterZone}
+                        onChange={(e) => setFilterZone(e.target.value)}
+                    >
+                        <option value="tous">Tous les quartiers</option>
+                        <option value="Centre-ville">Centre-ville</option>
+                        <option value="Petite Anse">Petite Anse</option>
+                        <option value="Vertières">Vertières</option>
+                        <option value="Haut du Cap">Haut du Cap</option>
+                    </select>
+                </div>
+
+                {/* Filtre par Urgence */}
+                <div className="col-12 col-md-3">
+                    <label className="form-label small fw-semibold mb-1 text-muted">Niveau d'Urgence</label>
+                    <select 
+                        className="form-select form-select-sm"
+                        value={filterUrgency}
+                        onChange={(e) => setFilterUrgency(e.target.value)}
+                    >
+                        <option value="tous">Toutes les urgences</option>
+                        <option value="faible">Faible</option>
+                        <option value="moyen">Moyen</option>
+                        <option value="critique">Critique</option>
+                    </select>
+                </div>
+
+                {/* Bouton de Réinitialisation rapide */}
+                <div className="col-12 col-md-auto ms-auto pt-3">
+                    <button 
+                        onClick={() => { setFilterZone('tous'); setFilterUrgency('tous'); }}
+                        className="btn btn-outline-secondary btn-sm fw-semibold"
+                    >
+                        Réinitialiser les filtres
+                    </button>
+                </div>
+            </div>
+        </div>
+
 
         {loading ? (
           <div className="text-center my-5">
@@ -104,7 +166,7 @@ export default function DashboardAgent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {reports.map((report) => (
+                  {filteredReports.map((report) => (
                     <tr key={report.id} className={getStatusRowClass(report.status)}>
                       <td className="ps-4 font-monospace small">
                         {new Date(report.created_at).toLocaleDateString('fr-FR')}

@@ -16,7 +16,7 @@ export default function Navbar() {
         } finally {
             //On vide le context React et le localStorage
             logoutUser();
-            Navigate('/login');
+            Navigate('/');
         }
     };
 

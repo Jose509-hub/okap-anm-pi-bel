@@ -19,6 +19,22 @@ class AuthController extends Controller
             'password' =>'required|string|min:6',
             'phone' =>['required', 'regex:/^(\+509)?\d{8}$/'],
             'role' => 'required|string|in:citoyen,agent',
+        ],[
+            //Message pour nom invalide
+            'name.required' => 'Le nom complet est obligatoire pour créer un compte. ',
+
+            //Champ Email
+            'email.required' => 'Une adresse email est requise.',
+            'email.emal' => 'Veuillez entrer une adresse email valide',
+            'email.unique' => 'Cet email est déjà utilisé par un autre citoyen.',
+
+            // message pour le telephone
+            'phone.required' => 'Le numéro de téléphone est obligatoire',
+            'phone.regex' => 'Le numéro de téléphone doit contenir exactement 8 chiffres.',
+
+            //Message pour le mot de passe
+            'password.required' => 'Le mot de passe est obligatoire.',
+            'password.min' => 'Pour votre sécurité, le mot de passe doit faire au moins 6 caractères.'
         ]);
 
         if ($validator->fails()) {

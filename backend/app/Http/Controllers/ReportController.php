@@ -38,6 +38,9 @@ class ReportController extends Controller
             'adress' => 'required|string|max:255',
             'description' => 'required|string|max:255',
             'urgency' => 'required|string|in:faible,moyen,critique'
+        ], [
+            'adresse.required' => 'Veuillez indiquer une adresse ou un repère physique pour nos camions.',
+            'description.required' => 'Merci de décrire brièvement le type de déchets constatés.'
         ]);
 
         if ($validator->fails()) {
